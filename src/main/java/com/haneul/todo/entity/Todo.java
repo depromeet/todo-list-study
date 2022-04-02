@@ -1,6 +1,5 @@
 package com.haneul.todo.entity;
 
-import lombok.Builder;
 import lombok.Getter;
 
 import javax.persistence.*;
