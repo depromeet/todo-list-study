@@ -14,8 +14,10 @@ public enum Status {
     private final String title;
 
     public Status change() {
-        if (this == PROCEEDING) return COMPLETED;
-        else return PROCEEDING;
+        if (this == PROCEEDING) {
+            return COMPLETED;
+        }
+        return PROCEEDING;
     }
 
 }

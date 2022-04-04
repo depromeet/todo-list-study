@@ -1,10 +1,15 @@
 package com.haneul.todo.controller;
 
 import com.haneul.todo.controller.common.Response;
+import com.haneul.todo.controller.common.TodoResourceAssembler;
 import com.haneul.todo.dto.request.TodoRequest;
 import com.haneul.todo.dto.response.TodoDeleteResponse;
+import com.haneul.todo.dto.response.TodoListResponse;
 import com.haneul.todo.dto.response.TodoResponse;
+import com.haneul.todo.entity.Todo;
 import com.haneul.todo.service.TodoService;
+import lombok.RequiredArgsConstructor;
+import org.modelmapper.ModelMapper;
 import org.springframework.hateoas.CollectionModel;
 import org.springframework.hateoas.EntityModel;
 import org.springframework.hateoas.MediaTypes;
@@ -14,71 +19,53 @@ import org.springframework.web.bind.annotation.*;
 import java.util.ArrayList;
 import java.util.List;
 
-import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.linkTo;
-import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.methodOn;
-
-
 @RestController
 @RequestMapping(value = "/api/v1/posts", produces = MediaTypes.HAL_JSON_VALUE)
-public record TodoController(TodoService todoService) {
+@RequiredArgsConstructor
+public class TodoController {
+
+    private final TodoService todoService;
+    private final TodoResourceAssembler todoResourceAssembler;
+    private final ModelMapper modelMapper = new ModelMapper();
 
     @PostMapping
-    public ResponseEntity<EntityModel<TodoResponse>> createTodo(@RequestBody TodoRequest todoRequest) {
+    public ResponseEntity<EntityModel<Todo>> createTodo(@RequestBody TodoRequest todoRequest) {
         TodoResponse todoResponse = todoService.createTodo(todoRequest);
-        EntityModel<TodoResponse> model = EntityModel.of(
-                todoResponse,
-                linkTo(methodOn(TodoController.class).findTodo(todoResponse.id())).withSelfRel(),
-                linkTo(methodOn(TodoController.class)).withRel("update"),
-                linkTo(methodOn(TodoController.class)).withRel("delete")
-        );
-        return Response.created(model);
+        Todo todo = modelMapper.map(todoResponse, Todo.class);
+        return Response.created(todoResourceAssembler.toModel(todo));
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<EntityModel<TodoResponse>> findTodo(@PathVariable Long id) {
+    public ResponseEntity<EntityModel<Todo>> findTodo(@PathVariable Long id) {
         TodoResponse todoResponse = todoService.findById(id);
-        EntityModel<TodoResponse> model = EntityModel.of(
-                todoResponse,
-                linkTo(methodOn(TodoController.class).findTodo(todoResponse.id())).withSelfRel(),
-                linkTo(methodOn(TodoController.class)).withRel("update"),
-                linkTo(methodOn(TodoController.class)).withRel("delete")
-        );
-        return Response.ok(model);
+        Todo todo = modelMapper.map(todoResponse, Todo.class);
+        return Response.ok(todoResourceAssembler.toModel(todo));
     }
 
     @GetMapping
-    public ResponseEntity<CollectionModel<EntityModel<TodoResponse>>> findTodos()
-            throws IllegalAccessException {
-        List<EntityModel<TodoResponse>> todoResponses = new ArrayList<>();
-        todoService.findAll()
-                .todoResponses()
-                .forEach(todoResponse ->
-                        todoResponses.add(EntityModel.of(
-                                todoResponse,
-                                linkTo(methodOn(TodoController.class).findTodo(todoResponse.id())).withSelfRel(),
-                                linkTo(methodOn(TodoController.class)).withRel("update"),
-                                linkTo(methodOn(TodoController.class)).withRel("delete")
-                        ))
-                );
+    public ResponseEntity<CollectionModel<EntityModel<Todo>>> findTodos() {
+        TodoListResponse todoResponses = todoService.findAll();
+        List<Todo> todos = new ArrayList<>();
 
-        CollectionModel<EntityModel<TodoResponse>> model = CollectionModel.of(
-                todoResponses,
-                linkTo(methodOn(TodoController.class).findTodos()).withSelfRel()
-        );
-        return Response.ok(model);
+        todoResponses.todoResponses()
+                .forEach(todoResponse ->
+                                todos.add(modelMapper.map(todoResponse, Todo.class))
+                );
+        return Response.ok(todoResourceAssembler.toCollectionModel(todos));
     }
 
     @PatchMapping("/{id}")
-    public ResponseEntity<EntityModel<TodoResponse>> updateTodo(@PathVariable Long id, @RequestBody TodoRequest todoRequest) {
+    public ResponseEntity<EntityModel<Todo>> updateTodo(@PathVariable Long id, @RequestBody TodoRequest todoRequest) {
         TodoResponse todoResponse = todoService.update(todoRequest, id);
+        Todo todo = modelMapper.map(todoResponse, Todo.class);
+        return Response.ok(todoResourceAssembler.toModel(todo));
+    }
 
-        EntityModel<TodoResponse> model = EntityModel.of(
-                todoResponse,
-                linkTo(methodOn(TodoController.class).findTodo(todoResponse.id())).withSelfRel(),
-                linkTo(methodOn(TodoController.class)).withRel("update"),
-                linkTo(methodOn(TodoController.class)).withRel("delete")
-        );
-        return Response.ok(model);
+    @PostMapping("/{id}")
+    public ResponseEntity<EntityModel<Todo>> updateStatus(@PathVariable Long id) {
+        TodoResponse todoResponse = todoService.updateStatus(id);
+        Todo todo = modelMapper.map(todoResponse, Todo.class);
+        return Response.ok(todoResourceAssembler.toModel(todo));
     }
 
     @DeleteMapping("/{id}")
@@ -86,5 +73,4 @@ public record TodoController(TodoService todoService) {
         TodoDeleteResponse todoDeleteResponse = todoService.deleteById(id);
         return Response.ok(todoDeleteResponse);
     }
-
 }

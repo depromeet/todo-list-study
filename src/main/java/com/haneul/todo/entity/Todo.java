@@ -1,11 +1,12 @@
 package com.haneul.todo.entity;
 
 import lombok.Getter;
+import org.springframework.http.HttpStatus;
 
 import javax.persistence.*;
 
-@Entity
 @Getter
+@Entity
 public class Todo extends BaseEntity {
 
     @Id
@@ -22,10 +23,10 @@ public class Todo extends BaseEntity {
     @Column(nullable = false)
     private Status status;
 
-    public Todo(String title, String content) {
+    public Todo(String title, String content, Status status) {
         this.title = title;
         this.content = content;
-        this.status = Status.PROCEEDING;
+        this.status = status;
     }
 
     public void update(String title, String content) {
