@@ -1,12 +1,14 @@
 package com.haneul.todo.entity;
 
+import com.haneul.todo.common.BaseEntity;
 import lombok.Getter;
-import org.springframework.http.HttpStatus;
+import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
 
 @Getter
 @Entity
+@NoArgsConstructor
 public class Todo extends BaseEntity {
 
     @Id
