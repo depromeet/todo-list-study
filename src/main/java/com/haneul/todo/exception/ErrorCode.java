@@ -7,7 +7,7 @@ import lombok.Getter;
 @AllArgsConstructor
 public enum ErrorCode {
     NOT_TODO_FOUND("TODO-ERR-404", "TODO NOT FOUND"),
-    INTER_SERVER_ERROR("COMMON-ERR-500", "INTER SERVER ERROR");
+    BAD_REQUEST("COMMON-ERR-400", "BAD REQUEST");
 
     private String errorCode;
     private String message;
