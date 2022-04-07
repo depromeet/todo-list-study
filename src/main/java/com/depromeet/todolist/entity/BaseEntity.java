@@ -1,4 +1,4 @@
-package com.depromeet.todolist.model;
+package com.depromeet.todolist.entity;
 
 import lombok.Getter;
 import org.springframework.data.annotation.CreatedDate;
