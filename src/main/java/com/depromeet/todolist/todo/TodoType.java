@@ -1,5 +1,8 @@
 package com.depromeet.todolist.todo;
 
+import lombok.Getter;
+
+@Getter
 public enum TodoType {
     STUDY("학습"),
     WORK("업무"),
@@ -10,9 +13,5 @@ public enum TodoType {
 
     TodoType(String korean) {
         this.korean = korean;
-    }
-
-    public String getKorean() {
-        return korean;
     }
 }

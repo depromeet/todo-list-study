@@ -20,21 +20,19 @@ public class TodoController {
     public ApiResult<List<TodoResponse>> findAll() {
         return ApiResult.OK(
                 todoService.findAll()
-                        .orElseThrow(() -> new IllegalArgumentException()));
+                        .getTodoResponses());
     }
 
     @GetMapping("/{todoId}")
     public ApiResult<TodoResponse> findAll(@PathVariable(value = "todoId") Long todoId) {
         return ApiResult.OK(
-                todoService.find(todoId)
-                        .orElseThrow(() -> new IllegalArgumentException()));
+                todoService.find(todoId));
     }
 
     @PostMapping("/{todoId}")
     public ApiResult<TodoResponse> save(@PathVariable(value = "todoId") Long todoId, @RequestBody TodoRequest todoRequest) {
         return ApiResult.OK(
-                todoService.save(todoRequest)
-                        .orElseThrow(() -> new IllegalArgumentException()));
+                todoService.save(todoRequest));
     }
 
     // COMMENT: Service 레이어의 void 메서드에 대한 api 리턴 방법

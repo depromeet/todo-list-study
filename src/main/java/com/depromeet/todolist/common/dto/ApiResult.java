@@ -1,6 +1,6 @@
 package com.depromeet.todolist.common.dto;
 
-import com.depromeet.todolist.exception.ApplicationException;
+import com.depromeet.todolist.exception.BusinessException;
 import org.springframework.http.HttpStatus;
 
 /** 모든 API 반환 형식의 통일을 위한 DTO */
@@ -24,8 +24,8 @@ public class ApiResult<T> {
         return new ApiResult<>(false, null, new ApiError(throwable, status));
     }
 
-    public static ApiResult<?> ERROR(ApplicationException applicationException) {
-        return new ApiResult<>(false, null, new ApiError(applicationException));
+    public static ApiResult<?> ERROR(BusinessException businessException) {
+        return new ApiResult<>(false, null, new ApiError(businessException));
     }
 
     public static ApiResult<?> ERROR(String errorMessage, HttpStatus status) {

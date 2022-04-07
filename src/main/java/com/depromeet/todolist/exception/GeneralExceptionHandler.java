@@ -11,7 +11,7 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 
 import static com.depromeet.todolist.common.dto.ApiResult.ERROR;
 
-@ControllerAdvice
+@RestControllerAdvice
 @Slf4j
 public class GeneralExceptionHandler {
 
@@ -21,10 +21,10 @@ public class GeneralExceptionHandler {
         return new ResponseEntity<>(ERROR(throwable, status), headers, status);
     }
 
-    private ResponseEntity<ApiResult<?>> newApplicationResponse(ApplicationException applicationException, HttpStatus status) {
+    private ResponseEntity<ApiResult<?>> newApplicationResponse(BusinessException businessException, HttpStatus status) {
         HttpHeaders headers = new HttpHeaders();
         headers.add("Content-Type", "application/json");
-        return new ResponseEntity<>(ERROR(applicationException), headers, status);
+        return new ResponseEntity<>(ERROR(businessException), headers, status);
     }
 
     @ExceptionHandler({Throwable.class, RuntimeException.class})

@@ -31,9 +31,9 @@ public class Todo extends BaseEntity {
         this.type = type;
     }
 
-    void update(TodoRequest request) {
-        this.content = request.getContent();
-        this.type = request.getType();
+    void update(String content, TodoType type) {
+        this.content = content;
+        this.type = type;
     }
 
     void delete() {
