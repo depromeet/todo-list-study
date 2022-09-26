@@ -1,4 +1,4 @@
-package com.depromeet.todolist.common;
+package com.haneul.todo.common;
 
 import lombok.Getter;
 import org.springframework.data.annotation.CreatedDate;
@@ -12,7 +12,8 @@ import java.time.LocalDateTime;
 @Getter
 @MappedSuperclass
 @EntityListeners(AuditingEntityListener.class)
-public abstract class BaseEntity {
+public class BaseEntity {
+
     @CreatedDate
     private LocalDateTime createdAt;
 

@@ -1,4 +1,4 @@
-package com.depromeet.todolist.config;
+package com.haneul.todo.config;
 
 import org.springframework.context.annotation.Configuration;
 import org.springframework.data.jpa.repository.config.EnableJpaAuditing;
