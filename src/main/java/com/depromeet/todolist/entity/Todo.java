@@ -19,6 +19,6 @@ public class Todo {
     private String title;
 
     @ManyToOne
-    @JoinColumn(name = "userid", nullable = false)
+    @JoinColumn(name = "user_id", nullable = false)
     private User user;
 }

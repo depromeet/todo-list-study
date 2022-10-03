@@ -10,7 +10,5 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @Builder
 public class RequestUserDto {
-    private Long id;
     private String name;
-
 }
