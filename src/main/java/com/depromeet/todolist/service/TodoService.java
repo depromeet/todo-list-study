@@ -42,16 +42,17 @@ public class TodoService {
     }
 
     // 할 일 추가
-    public void addTodo(Long userId, RequestTodoDto requestTodoDto) {
+    public Todo addTodo(Long userId, RequestTodoDto requestTodoDto) {
         User user = userRepository.findById(userId).orElse(null);
         if (user != null) {
             Todo todo = new Todo();
             todo.setTitle(requestTodoDto.getTitle());
             todo.setUser(user);
-            todoRepository.save(todo);
             log.info(user.getName() + "의 Todo : " + todo.getTitle() + " 추가 완료");
+            return todoRepository.save(todo);
         } else {
             log.info("[addTodo]사용자가 존재하지 않음");
+            return null;
         }
     }
 

@@ -20,6 +20,6 @@ public class User {
     @Column(name = "name", nullable = false, unique = true)
     private String name;
 
-    @OneToMany(mappedBy = "user")
+    @OneToMany(mappedBy = "user",fetch = FetchType.EAGER)
     private List<Todo> todoList = new ArrayList<>();
 }
