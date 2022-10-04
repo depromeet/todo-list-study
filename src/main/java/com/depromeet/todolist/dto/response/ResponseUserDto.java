@@ -1,12 +1,9 @@
 package com.depromeet.todolist.dto.response;
 
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
-@Data
-@AllArgsConstructor
-@NoArgsConstructor
+@Getter
+@RequiredArgsConstructor
 public class ResponseUserDto {
-    private String name;
+    private final String name;
 }

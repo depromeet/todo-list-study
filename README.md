@@ -1,13 +1,44 @@
 # REAL TODO-LIST
 > REST 컨벤션 준수하기
 
-### 필수 구현 요구사항
-- JAVA 17 기준으로 진행해주세요 (18버전에서 에러를 발견했습니다.)
-- TODOLIST CRUD API를 구현하세요(생성, 수정, 삭제, 단건조회, 전체조회)
-- RESTFUL한 API를 구현하도록 노력해보세요
-- 클린코드란 무엇일까요? 고민해보면서 좋을 것 같아요
-- 객체지향 패러다임을 고민하며 구현을 진행해요
-- README를 꼭 작성해주세요!!
-- 본인이 생각하기에 TODO-LIST에 필요하다고 생각되는 기능이 있다면 추가해도 좋아요!
+#구현된 기능
 
-database [depromeet_todo_list] 생성
+##dto
+- Request
+  - RequestUserDto
+  - RequestTodoDto
+- Response
+    - ResponseUserDto
+    - ResponseTodoDto
+
+##controller
+- UserController
+  - 생성 (method : POST, "/users")
+    - RequestBody : RequestUserDto
+  - 조회 (method : GET, "/users/{name}")
+  - 삭제 (method : DELETE, "/users/{name}")
+- TodoController
+  - 생성  (method : POST, "/users/{name}/todo-list")
+    - RequestBody : RequestTodoDto
+  - 목록 조회 (method : GET, "/users/{name}/todo-list")
+  - 단일 조회 (method : GET, "/users/{name}/todo-list/{todoId}")
+  - 수정 (method : PATCH, "/users/{name}/todo-list/{todoId}")
+    - RequestBody : RequestTodoDto
+  - 삭제 (method : DELETE, "/users/{name}/todo-list/{todoId}")
+
+##service
+- UserService
+  - findUser (사용자 검색)
+  - createUser (사용자 추가)
+  - deleteUser (사용자 삭제)
+- TodoService
+  - findTodo (할 일 검색)
+  - addTodo (할 일 추가)
+  - updateTodoTitle (할 일 수정) -- need help
+  - deleteTodo (할 일 삭제)
+  - isUserContainsTodo (해당 사용자 todo 목록에 있는지)
+
+##exception
+- DuplicatedUserException (중복된 사용자 예외)
+- TodoNotFoundException (할 일 없는 예외)
+- UserNotFoundException (사용자 없는 예외)

@@ -1,8 +1,8 @@
 package com.depromeet.todolist.exception;
 
-import com.depromeet.todolist.exception.customExcption.DuplicatedUserExcption;
-import com.depromeet.todolist.exception.customExcption.TodoNotFoundException;
-import com.depromeet.todolist.exception.customExcption.UserNotFoundException;
+import com.depromeet.todolist.exception.customException.DuplicatedUserException;
+import com.depromeet.todolist.exception.customException.TodoNotFoundException;
+import com.depromeet.todolist.exception.customException.UserNotFoundException;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -20,8 +20,8 @@ public class CustomExceptionHandler {
     }
 
 
-    @ExceptionHandler(DuplicatedUserExcption.class)
-    public ResponseEntity<ErrorResponse> handlerDuplicatedUserException(DuplicatedUserExcption e) {
+    @ExceptionHandler(DuplicatedUserException.class)
+    public ResponseEntity<ErrorResponse> handlerDuplicatedUserException(DuplicatedUserException e) {
         ErrorResponse errorResponse = new ErrorResponse(HttpStatus.CONFLICT, "중복된 사용자 존재");
         return new ResponseEntity<>(errorResponse, HttpStatus.CONFLICT);
     }
