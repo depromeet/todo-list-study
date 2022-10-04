@@ -42,3 +42,8 @@
 - DuplicatedUserException (중복된 사용자 예외)
 - TodoNotFoundException (할 일 없는 예외)
 - UserNotFoundException (사용자 없는 예외)
+
+
+# NEED HELP
+- TodoService :  List<Todo> -> List<ResponseTodoDto> 간단히.
+- todo Patch가 적용되지 않음.
