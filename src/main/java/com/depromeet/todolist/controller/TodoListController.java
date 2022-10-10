@@ -11,6 +11,7 @@ import com.depromeet.todolist.exception.customException.UserNotFoundException;
 import com.depromeet.todolist.service.TodoService;
 import com.depromeet.todolist.service.UserService;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -18,6 +19,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.ArrayList;
 import java.util.List;
 
+@Slf4j
 @RestController
 @RequestMapping("/users/{name}/todo-list")
 @RequiredArgsConstructor
@@ -29,8 +31,7 @@ public class TodoListController {
     public ResponseEntity<List<ResponseTodoDto>> userTodoList(@PathVariable String name) {
         User user = userService.findUser(new RequestUserDto(name));
         if(user == null) throw new UserNotFoundException();
-        List<Todo> allTodo = user.getTodoList().getTodoList();
-//        List<Todo> allTodo = todoService.findAllTodo(name);
+        List<Todo> allTodo = user.getTodos().getTodoList();
         List<ResponseTodoDto> allTodoDto = new ArrayList<>();
         for (Todo todo : allTodo) {
             allTodoDto.add(new ResponseTodoDto(todo.getId(), todo.getTitle()));
@@ -44,11 +45,8 @@ public class TodoListController {
     public ResponseEntity<ResponseTodoDto> userTodo(@PathVariable String name, @PathVariable Long todoId) {
         User user = userService.findUser(new RequestUserDto(name));
         if(user == null) throw new UserNotFoundException();
-        Todo todo = todoService.findTodo(name, todoId);
-        if (todo == null || !todoService.isUserContainsTodo(name, todoId)) {
-            throw new TodoNotFoundException();
-        }
-
+        Todo todo = user.getTodos().checkUserContainsTodo(todoId);
+//        Todo todo = todoService.findTodo(name, todoId);
         return new ResponseEntity<>(new ResponseTodoDto(todo.getId(), todo.getTitle()), HttpStatus.OK);
     }
 
@@ -64,10 +62,7 @@ public class TodoListController {
     public ResponseEntity<ResponseTodoDto> updateUserTodo(@PathVariable String name, @PathVariable Long todoId, @RequestBody RequestTodoDto requestTodoDto) {
         User user = userService.findUser(new RequestUserDto(name));
         if (user == null) throw new UserNotFoundException();
-        Todo todo = todoService.findTodo(name, todoId);
-        if (todo == null || !todoService.isUserContainsTodo(name, todoId)) {
-            throw new TodoNotFoundException();
-        }
+        user.getTodos().checkUserContainsTodo(todoId);
         Todo updatedTodo = todoService.updateTodoTitle(todoId, requestTodoDto.getTitle());
         return new ResponseEntity<>(new ResponseTodoDto(updatedTodo.getId(), updatedTodo.getTitle()), HttpStatus.CREATED);
     }
@@ -76,10 +71,7 @@ public class TodoListController {
     public ResponseEntity<ResponseTodoDto> deleteUserTodo(@PathVariable String name, @PathVariable Long todoId) {
         User user = userService.findUser(new RequestUserDto(name));
         if(user == null) throw new UserNotFoundException();
-        Todo todo = todoService.findTodo(name, todoId);
-        if (todo == null || !todoService.isUserContainsTodo(name, todoId)) {
-            throw new TodoNotFoundException();
-        }
+        user.getTodos().checkUserContainsTodo(todoId);
         todoService.deleteTodo(todoId);
         return new ResponseEntity<>(null, HttpStatus.NO_CONTENT);
     }

@@ -1,6 +1,7 @@
 package com.depromeet.todolist.service;
 
 import com.depromeet.todolist.dto.request.RequestUserDto;
+import com.depromeet.todolist.entity.Todos;
 import com.depromeet.todolist.entity.User;
 import com.depromeet.todolist.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
@@ -18,7 +19,7 @@ public class UserService {
     }
 
     public User createUser(RequestUserDto requestUserDto) {
-        User user = new User(requestUserDto.getName());
+        User user = new User(requestUserDto.getName(), new Todos());
         return userRepository.save(user);
     }
 

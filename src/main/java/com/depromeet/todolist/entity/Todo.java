@@ -1,5 +1,6 @@
 package com.depromeet.todolist.entity;
 
+import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import org.hibernate.Hibernate;
 
@@ -28,20 +29,7 @@ public class Todo {
         this.user = user;
     }
 
-    public void updateTitle(String title) {
+    public void updateTitle(String title) { // 더티 체킹을 의도했는데..
         this.title = title;
-    }
-
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || Hibernate.getClass(this) != Hibernate.getClass(o)) return false;
-        Todo todo = (Todo) o;
-        return id != null && Objects.equals(id, todo.id);
-    }
-
-    @Override
-    public int hashCode() {
-        return getClass().hashCode();
     }
 }
