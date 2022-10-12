@@ -14,31 +14,16 @@ import java.util.List;
 
 @Slf4j
 @Service
+@Transactional
 @RequiredArgsConstructor
 public class TodoService {
     private final TodoRepository todoRepository;
-    private final UserRepository userRepository;
 
-    public List<Todo> findAllTodo(String name) {
-        User user = userRepository.findById(name).orElse(null);
-        assert user != null;
-        return user.getTodos().getTodoList();
-    }
-
-
-    public Todo findTodo(String name, Long todoId) {
-        return todoRepository.findById(todoId).orElse(null);
-    }
-
-
-    public Todo addTodo(String name, RequestTodoDto requestTodoDto) {
-        User user = userRepository.findById(name).orElse(null);
-        assert user != null;
+    public Todo addTodo(User user, RequestTodoDto requestTodoDto) {
         Todo todo = new Todo(requestTodoDto.getTitle(), user);
         return todoRepository.save(todo);
     }
 
-    @Transactional
     public Todo updateTodoTitle(Long todoId, String newTitle) {
         Todo todo = todoRepository.findById(todoId).orElse(null);
         assert todo != null;

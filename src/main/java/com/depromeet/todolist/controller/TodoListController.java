@@ -1,12 +1,10 @@
 package com.depromeet.todolist.controller;
 
-
 import com.depromeet.todolist.dto.request.RequestTodoDto;
 import com.depromeet.todolist.dto.request.RequestUserDto;
 import com.depromeet.todolist.dto.response.ResponseTodoDto;
 import com.depromeet.todolist.entity.Todo;
 import com.depromeet.todolist.entity.User;
-import com.depromeet.todolist.exception.customException.TodoNotFoundException;
 import com.depromeet.todolist.exception.customException.UserNotFoundException;
 import com.depromeet.todolist.service.TodoService;
 import com.depromeet.todolist.service.UserService;
@@ -14,6 +12,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 import java.util.ArrayList;
 import java.util.List;
@@ -22,16 +21,23 @@ import java.util.List;
 @RestController
 @RequestMapping("/users/{name}/todo-list")
 @RequiredArgsConstructor
+@Transactional
 public class TodoListController {
     private final TodoService todoService;
     private final UserService userService;
 
+
     @GetMapping //todo ResponseTodoDto로 변환 방법 생각하기
+
     public ResponseEntity<List<ResponseTodoDto>> userTodoList(@PathVariable String name) {
         User user = userService.findUser(new RequestUserDto(name));
+        log.info("findUser");
         if(user == null) throw new UserNotFoundException();
+        log.info("startAllTodos");
         List<Todo> allTodo = user.getTodos().getTodoList();
+        log.info("endAllTodos");
         List<ResponseTodoDto> allTodoDto = new ArrayList<>();
+
         for (Todo todo : allTodo) {
             allTodoDto.add(new ResponseTodoDto(todo.getId(), todo.getTitle()));
         }
@@ -39,13 +45,11 @@ public class TodoListController {
     }
 
 
-    // 해당 유저의 todoList에 맞는 todo가 있는지 확인하는 로직 추가 작성하기
     @GetMapping("/{todoId}")
     public ResponseEntity<ResponseTodoDto> userTodo(@PathVariable String name, @PathVariable Long todoId) {
         User user = userService.findUser(new RequestUserDto(name));
         if(user == null) throw new UserNotFoundException();
         Todo todo = user.getTodos().checkUserContainsTodo(todoId);
-//        Todo todo = todoService.findTodo(name, todoId);
         return new ResponseEntity<>(new ResponseTodoDto(todo.getId(), todo.getTitle()), HttpStatus.OK);
     }
 
@@ -53,7 +57,7 @@ public class TodoListController {
     public ResponseEntity<ResponseTodoDto> addUserTodo(@PathVariable String name, @RequestBody RequestTodoDto requestTodoDto) {
         User user = userService.findUser(new RequestUserDto(name));
         if(user == null) throw new UserNotFoundException();
-        Todo todo = todoService.addTodo(name, requestTodoDto);
+        Todo todo = todoService.addTodo(user, requestTodoDto);
         return new ResponseEntity<>(new ResponseTodoDto(todo.getId(), todo.getTitle()), HttpStatus.CREATED);
     }
 

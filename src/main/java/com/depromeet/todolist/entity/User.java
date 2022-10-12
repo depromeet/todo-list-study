@@ -1,6 +1,8 @@
 package com.depromeet.todolist.entity;
 
 import lombok.*;
+import org.hibernate.annotations.Fetch;
+import org.hibernate.engine.FetchStyle;
 
 import javax.persistence.*;
 
@@ -17,6 +19,7 @@ public class User {
     public User(){
     }
 
+    @Builder
     public User(String name, Todos todos) {
         this.name = name;
         this.todos = todos;
