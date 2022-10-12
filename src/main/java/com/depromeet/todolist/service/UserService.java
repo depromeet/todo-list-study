@@ -23,7 +23,7 @@ public class UserService {
     }
 
     public User createUser(RequestUserDto requestUserDto) {
-        User user = new User(requestUserDto.getName(), new Todos());
+        User user = new User(requestUserDto.getName());
         return userRepository.save(user);
     }
 

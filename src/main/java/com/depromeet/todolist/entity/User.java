@@ -14,14 +14,12 @@ public class User {
     private String name;
 
     @Embedded
-    private Todos todos;
+    private Todos todos = new Todos();
 
     public User(){
     }
 
-    @Builder
-    public User(String name, Todos todos) {
+    public User(String name) {
         this.name = name;
-        this.todos = todos;
     }
 }
