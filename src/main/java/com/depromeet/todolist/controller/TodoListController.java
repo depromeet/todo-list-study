@@ -1,28 +1,19 @@
 package com.depromeet.todolist.controller;
 
 import com.depromeet.todolist.dto.request.RequestTodoDto;
-import com.depromeet.todolist.dto.request.RequestUserDto;
 import com.depromeet.todolist.dto.response.ResponseTodoDto;
-import com.depromeet.todolist.entity.Todo;
-import com.depromeet.todolist.entity.User;
-import com.depromeet.todolist.exception.BusinessException;
-import com.depromeet.todolist.exception.ErrorCode;
 import com.depromeet.todolist.service.TodoService;
-import com.depromeet.todolist.service.UserService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
-import java.util.ArrayList;
 import java.util.List;
 
 @Slf4j
 @RestController
-@RequestMapping("/users/{name}/todo-list")
+@RequestMapping("/api/v1/users/{name}/todos")
 @RequiredArgsConstructor
-@Transactional
 public class TodoListController {
     private final TodoService todoService;
 
