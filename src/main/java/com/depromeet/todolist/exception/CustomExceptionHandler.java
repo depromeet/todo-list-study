@@ -1,34 +1,19 @@
 package com.depromeet.todolist.exception;
 
-import com.depromeet.todolist.exception.customException.DuplicatedUserException;
-import com.depromeet.todolist.exception.customException.TodoNotFoundException;
-import com.depromeet.todolist.exception.customException.UserNotFoundException;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
+import org.springframework.web.bind.annotation.RestControllerAdvice;
 
 @Slf4j
-@ControllerAdvice
+@RestControllerAdvice
 public class CustomExceptionHandler {
 
-    @ExceptionHandler(UserNotFoundException.class)
-    public ResponseEntity<ErrorResponse> handleUserNotFoundException(UserNotFoundException e) {
-        ErrorResponse errorResponse = new ErrorResponse(HttpStatus.NO_CONTENT, "존재하지 않는 사용");
-        return new ResponseEntity<>(errorResponse, HttpStatus.NO_CONTENT);
-    }
-
-
-    @ExceptionHandler(DuplicatedUserException.class)
-    public ResponseEntity<ErrorResponse> handlerDuplicatedUserException(DuplicatedUserException e) {
-        ErrorResponse errorResponse = new ErrorResponse(HttpStatus.CONFLICT, "중복된 사용자 존재");
-        return new ResponseEntity<>(errorResponse, HttpStatus.CONFLICT);
-    }
-
-    @ExceptionHandler(TodoNotFoundException.class)
-    public ResponseEntity<ErrorResponse> handlerTodoNotFoundException(TodoNotFoundException e) {
-        ErrorResponse errorResponse = new ErrorResponse(HttpStatus.NO_CONTENT, "존재하지 않는 TODO");
-        return new ResponseEntity<>(errorResponse, HttpStatus.NO_CONTENT);
+    @ExceptionHandler(BusinessException.class)
+    public ResponseEntity<ErrorResponse> handleBusinessException(BusinessException e) {
+        ErrorCode errorCode = e.getErrorCode();
+        ErrorResponse errorResponse = new ErrorResponse(errorCode.getHttpStatus(), errorCode.getMessage());
+        log.info(String.valueOf(errorResponse));
+        return new ResponseEntity<>(errorResponse, errorCode.getHttpStatus());
     }
 }

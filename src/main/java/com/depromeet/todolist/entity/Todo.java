@@ -2,6 +2,7 @@ package com.depromeet.todolist.entity;
 
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import org.hibernate.Hibernate;
 
 import javax.persistence.*;
@@ -9,6 +10,7 @@ import java.util.Objects;
 
 @Getter
 @Entity
+@NoArgsConstructor
 public class Todo {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -20,9 +22,6 @@ public class Todo {
     @ManyToOne
     @JoinColumn(name = "user_id", nullable = false, foreignKey = @ForeignKey(ConstraintMode.NO_CONSTRAINT))
     private User user;
-
-    public Todo() {
-    }
 
     public Todo(String title, User user) {
         this.title = title;

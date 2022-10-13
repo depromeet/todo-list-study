@@ -5,7 +5,8 @@ import com.depromeet.todolist.dto.request.RequestUserDto;
 import com.depromeet.todolist.dto.response.ResponseTodoDto;
 import com.depromeet.todolist.entity.Todo;
 import com.depromeet.todolist.entity.User;
-import com.depromeet.todolist.exception.customException.UserNotFoundException;
+import com.depromeet.todolist.exception.BusinessException;
+import com.depromeet.todolist.exception.ErrorCode;
 import com.depromeet.todolist.service.TodoService;
 import com.depromeet.todolist.service.UserService;
 import lombok.RequiredArgsConstructor;
@@ -24,58 +25,36 @@ import java.util.List;
 @Transactional
 public class TodoListController {
     private final TodoService todoService;
-    private final UserService userService;
 
 
-    @GetMapping //todo ResponseTodoDto로 변환 방법 생각하기
-
+    @GetMapping
     public ResponseEntity<List<ResponseTodoDto>> userTodoList(@PathVariable String name) {
-        User user = userService.findUser(new RequestUserDto(name));
-        log.info("findUser");
-        if(user == null) throw new UserNotFoundException();
-        log.info("startAllTodos");
-        List<Todo> allTodo = user.getTodos().getTodoList();
-        log.info("endAllTodos");
-        List<ResponseTodoDto> allTodoDto = new ArrayList<>();
-
-        for (Todo todo : allTodo) {
-            allTodoDto.add(new ResponseTodoDto(todo.getId(), todo.getTitle()));
-        }
-        return new ResponseEntity<>(allTodoDto, HttpStatus.OK);
+        List<ResponseTodoDto> userTodoList = todoService.getUserTodoList(name);
+        return new ResponseEntity<>(userTodoList, HttpStatus.OK);
     }
 
 
     @GetMapping("/{todoId}")
     public ResponseEntity<ResponseTodoDto> userTodo(@PathVariable String name, @PathVariable Long todoId) {
-        User user = userService.findUser(new RequestUserDto(name));
-        if(user == null) throw new UserNotFoundException();
-        Todo todo = user.getTodos().checkUserContainsTodo(todoId);
-        return new ResponseEntity<>(new ResponseTodoDto(todo.getId(), todo.getTitle()), HttpStatus.OK);
+        ResponseTodoDto responseTodoDto = todoService.getTodo(name, todoId);
+        return new ResponseEntity<>(responseTodoDto, HttpStatus.OK);
     }
 
     @PostMapping
     public ResponseEntity<ResponseTodoDto> addUserTodo(@PathVariable String name, @RequestBody RequestTodoDto requestTodoDto) {
-        User user = userService.findUser(new RequestUserDto(name));
-        if(user == null) throw new UserNotFoundException();
-        Todo todo = todoService.addTodo(user, requestTodoDto);
-        return new ResponseEntity<>(new ResponseTodoDto(todo.getId(), todo.getTitle()), HttpStatus.CREATED);
+        ResponseTodoDto responseTodoDto = todoService.addTodo(name, requestTodoDto);
+        return new ResponseEntity<>(responseTodoDto, HttpStatus.CREATED);
     }
 
     @PatchMapping("/{todoId}")
     public ResponseEntity<ResponseTodoDto> updateUserTodo(@PathVariable String name, @PathVariable Long todoId, @RequestBody RequestTodoDto requestTodoDto) {
-        User user = userService.findUser(new RequestUserDto(name));
-        if (user == null) throw new UserNotFoundException();
-        user.getTodos().checkUserContainsTodo(todoId);
-        Todo updatedTodo = todoService.updateTodoTitle(todoId, requestTodoDto.getTitle());
-        return new ResponseEntity<>(new ResponseTodoDto(updatedTodo.getId(), updatedTodo.getTitle()), HttpStatus.CREATED);
+        ResponseTodoDto responseTodoDto = todoService.updateTodoTitle(name, todoId, requestTodoDto.getTitle());
+        return new ResponseEntity<>(responseTodoDto, HttpStatus.CREATED);
     }
 
     @DeleteMapping("/{todoId}")
     public ResponseEntity<ResponseTodoDto> deleteUserTodo(@PathVariable String name, @PathVariable Long todoId) {
-        User user = userService.findUser(new RequestUserDto(name));
-        if(user == null) throw new UserNotFoundException();
-        user.getTodos().checkUserContainsTodo(todoId);
-        todoService.deleteTodo(todoId);
+        todoService.deleteTodo(name, todoId);
         return new ResponseEntity<>(null, HttpStatus.NO_CONTENT);
     }
 }

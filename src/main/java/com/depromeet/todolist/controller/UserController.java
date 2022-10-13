@@ -3,16 +3,14 @@ package com.depromeet.todolist.controller;
 import com.depromeet.todolist.dto.request.RequestUserDto;
 import com.depromeet.todolist.dto.response.ResponseUserDto;
 import com.depromeet.todolist.entity.User;
-import com.depromeet.todolist.exception.customException.DuplicatedUserException;
-import com.depromeet.todolist.exception.customException.UserNotFoundException;
+import com.depromeet.todolist.exception.ErrorCode;
+import com.depromeet.todolist.exception.BusinessException;
 import com.depromeet.todolist.service.UserService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-
-import java.util.List;
 
 @Slf4j
 @RestController
@@ -24,32 +22,20 @@ public class UserController {
 
     @PostMapping
     public ResponseEntity<ResponseUserDto> createUser(@RequestBody RequestUserDto requestUserDto) {
-        User user = userService.findUser(requestUserDto);
-        if(user != null){
-            throw new DuplicatedUserException();
-        }
-        User createdUser = userService.createUser(requestUserDto);
-        return new ResponseEntity<>(new ResponseUserDto(createdUser.getName()), HttpStatus.CREATED);
+        ResponseUserDto responseUserDto = userService.createUser(requestUserDto);
+        return new ResponseEntity<>(responseUserDto, HttpStatus.CREATED);
     }
 
     @GetMapping("/{name}")
     public ResponseEntity<ResponseUserDto> findUser(@PathVariable String name) {
-        RequestUserDto requestUserDto = new RequestUserDto(name);
-        User user = userService.findUser(requestUserDto);
-        if (user == null) {
-            throw new UserNotFoundException();
-        }
-        return new ResponseEntity<>(new ResponseUserDto(user.getName()), HttpStatus.OK);
+        ResponseUserDto responseUserDto = userService.findUser(name);
+        return new ResponseEntity<>(responseUserDto, HttpStatus.OK);
     }
 
     @DeleteMapping("/{name}")
     public ResponseEntity<ResponseUserDto> deleteUser(@PathVariable String name) {
-        RequestUserDto requestUserDto = new RequestUserDto(name);
-        User user = userService.findUser(requestUserDto);
-        if (user == null) {
-            throw new UserNotFoundException();
-        }
-        userService.deleteUser(requestUserDto);
+
+        userService.deleteUser(name);
         return new ResponseEntity<>(null, HttpStatus.NO_CONTENT);
     }
 }

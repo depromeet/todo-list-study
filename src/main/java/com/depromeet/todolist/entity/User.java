@@ -8,6 +8,7 @@ import javax.persistence.*;
 
 @Getter
 @Entity
+@NoArgsConstructor
 public class User {
     @Id
     @Column(name = "name", nullable = false)
@@ -15,9 +16,6 @@ public class User {
 
     @Embedded
     private Todos todos = new Todos();
-
-    public User(){
-    }
 
     public User(String name) {
         this.name = name;
