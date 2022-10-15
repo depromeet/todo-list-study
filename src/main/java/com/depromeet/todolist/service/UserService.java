@@ -18,11 +18,9 @@ public class UserService {
     private final CommonService commonService;
     private final UserRepository userRepository;
 
-
     public ResponseUserDto createUser(RequestUserDto requestUserDto) {
-        User userCheck = userRepository.findById(requestUserDto.getName()).orElse(null);
-        if(userCheck != null) throw new BusinessException(ErrorCode.DUPLICATED_USER);
-        User savedUser = userRepository.save(new User(requestUserDto.getName()));
+        User user = checkUserDuplicated(requestUserDto);
+        User savedUser = userRepository.save(user);
         return userEntityToDto(savedUser);
     }
 
@@ -38,5 +36,13 @@ public class UserService {
 
     private ResponseUserDto userEntityToDto(User user) {
         return new ResponseUserDto(user.getName());
+    }
+
+    private User checkUserDuplicated(RequestUserDto requestUserDto) {
+        String userName = requestUserDto.getName();
+        if (userRepository.existsById(userName)) {
+            throw new BusinessException(ErrorCode.DUPLICATED_USER);
+        }
+        return new User(userName);
     }
 }

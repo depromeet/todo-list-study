@@ -1,14 +1,14 @@
 package com.depromeet.todolist.entity;
 
-import lombok.*;
-import org.hibernate.annotations.Fetch;
-import org.hibernate.engine.FetchStyle;
+import lombok.AccessLevel;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
 
 @Getter
 @Entity
-@NoArgsConstructor
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class User {
     @Id
     @Column(name = "name", nullable = false)
