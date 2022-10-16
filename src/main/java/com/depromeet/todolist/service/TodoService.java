@@ -22,9 +22,9 @@ import java.util.List;
 @Transactional
 @RequiredArgsConstructor
 public class TodoService {
-
     private final CommonService commonService;
     private final TodoRepository todoRepository;
+
 
     public ResponseTodoDto getTodo(String name, Long todoId) {
         User user = commonService.findUserByIdIfExists(name);
@@ -33,11 +33,13 @@ public class TodoService {
         return todoEntityToDto(todo);
     }
 
+
     public List<ResponseTodoDto> getUserTodoList(String name) {
         User user = commonService.findUserByIdIfExists(name);
         Todos todoList = user.getTodos();
         return todoListToTodoDtoList(todoList);
     }
+
 
     public ResponseTodoDto addTodo(String name, RequestTodoDto requestTodoDto) {
         User user = commonService.findUserByIdIfExists(name);
@@ -61,9 +63,11 @@ public class TodoService {
         todoRepository.delete(todo);
     }
 
+
     private ResponseTodoDto todoEntityToDto(Todo todo) {
         return new ResponseTodoDto(todo.getId(), todo.getTitle());
     }
+
 
     private List<ResponseTodoDto> todoListToTodoDtoList(Todos todos) {
         List<Todo> todoList = todos.getTodoList();

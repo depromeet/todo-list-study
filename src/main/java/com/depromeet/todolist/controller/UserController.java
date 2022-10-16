@@ -17,8 +17,8 @@ import org.springframework.web.bind.annotation.*;
 @RequiredArgsConstructor
 @RequestMapping("/api/v1/users")
 public class UserController {
-
     private final UserService userService;
+
 
     @PostMapping
     public ResponseEntity<ResponseUserDto> createUser(@RequestBody RequestUserDto requestUserDto) {
@@ -26,15 +26,16 @@ public class UserController {
         return new ResponseEntity<>(responseUserDto, HttpStatus.CREATED);
     }
 
+
     @GetMapping("/{name}")
     public ResponseEntity<ResponseUserDto> findUser(@PathVariable String name) {
         ResponseUserDto responseUserDto = userService.findUser(name);
         return new ResponseEntity<>(responseUserDto, HttpStatus.OK);
     }
 
+
     @DeleteMapping("/{name}")
     public ResponseEntity<ResponseUserDto> deleteUser(@PathVariable String name) {
-
         userService.deleteUser(name);
         return new ResponseEntity<>(null, HttpStatus.NO_CONTENT);
     }

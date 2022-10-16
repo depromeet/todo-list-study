@@ -14,9 +14,9 @@ import org.springframework.stereotype.Service;
 @Service
 @RequiredArgsConstructor
 public class UserService {
-
     private final CommonService commonService;
     private final UserRepository userRepository;
+
 
     public ResponseUserDto createUser(RequestUserDto requestUserDto) {
         User user = checkUserDuplicated(requestUserDto);
@@ -24,19 +24,23 @@ public class UserService {
         return userEntityToDto(savedUser);
     }
 
+
     public ResponseUserDto findUser(String name) {
         User user = commonService.findUserByIdIfExists(name);
         return userEntityToDto(user);
     }
+
 
     public void deleteUser(String name) {
         User user = commonService.findUserByIdIfExists(name);
         userRepository.delete(user);
     }
 
+
     private ResponseUserDto userEntityToDto(User user) {
         return new ResponseUserDto(user.getName());
     }
+
 
     private User checkUserDuplicated(RequestUserDto requestUserDto) {
         String userName = requestUserDto.getName();

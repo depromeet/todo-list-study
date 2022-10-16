@@ -17,15 +17,18 @@ import java.util.TimeZone;
 public class TodoListApplication implements ApplicationListener<ApplicationReadyEvent> {
     private final Environment environment;
 
+
     public static void main(String[] args) {
         init();
         SpringApplication.run(TodoListApplication.class, args);
     }
 
+
     @Override
     public void onApplicationEvent(ApplicationReadyEvent event) {
         log.info("Spring Server Profiles Status : {}", Arrays.toString(environment.getActiveProfiles()));
     }
+
 
     public static void init() {
         log.info("Spring Server TimeZone : Asia/Seoul");

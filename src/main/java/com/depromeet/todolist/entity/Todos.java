@@ -4,7 +4,6 @@ import com.depromeet.todolist.exception.BusinessException;
 import com.depromeet.todolist.exception.ErrorCode;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-
 import javax.persistence.Embeddable;
 import javax.persistence.OneToMany;
 import java.util.List;
@@ -13,13 +12,14 @@ import java.util.List;
 @Embeddable
 @NoArgsConstructor
 public class Todos {
-
     @OneToMany(mappedBy = "user")
     private List<Todo> todoList;
+
 
     public Todos(List<Todo> todoList){
         this.todoList = todoList;
     }
+
 
     public Todo checkUserContainsTodo(Long todoId) {
         return todoList.stream()

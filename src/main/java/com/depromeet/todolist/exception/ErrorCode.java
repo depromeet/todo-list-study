@@ -12,6 +12,7 @@ public enum ErrorCode {
     NO_USER(HttpStatus.NO_CONTENT, "No USER")
     ;
 
+
     private final HttpStatus httpStatus;
     private final String message;
 }

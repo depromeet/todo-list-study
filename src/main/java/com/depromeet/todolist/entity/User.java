@@ -14,8 +14,10 @@ public class User {
     @Column(name = "name", nullable = false)
     private String name;
 
+
     @Embedded
     private Todos todos = new Todos();
+
 
     public User(String name) {
         this.name = name;

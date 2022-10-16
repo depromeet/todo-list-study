@@ -12,6 +12,7 @@ import org.springframework.stereotype.Service;
 public class CommonService {
     private final UserRepository userRepository;
 
+
     public User findUserByIdIfExists(String name){
         return userRepository.findById(name)
                 .orElseThrow(() -> new BusinessException(ErrorCode.NO_USER));
