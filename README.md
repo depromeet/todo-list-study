@@ -1,7 +1,7 @@
 # REAL TODO-LIST
 
 
-> ##FOCUSED ON
+> ## FOCUSED ON
 >- REST 컨벤션 준수
 >- 한 메서드당 하나의 기능
 >  - 가독성 확보
@@ -15,13 +15,13 @@
 >-  일급 컬렉션(Todos)을 활용한 User별 Todo List 관리
 
 
-#API
+# API
 Swagger 문서화
 
 ![img.png](img.png)
 
 
-##dto
+## dto
 - Request
   - RequestUserDto
   - RequestTodoDto
@@ -30,7 +30,7 @@ Swagger 문서화
   - ResponseTodoDto
 
 
-##controller
+## controller
 - UserController
   - 생성 (method : POST, "/users")
     - RequestBody : RequestUserDto
@@ -46,7 +46,7 @@ Swagger 문서화
   - 삭제 (method : DELETE, "/users/{name}/todo-list/{todoId}")
 
 
-##service
+## service
 각 서비스에서 Entity -> Dto 변환 메서드를 따로 만들어 하나의 메서드가 하나의 역할을 가질 수 있도록 함
 - CommonService
   - findUserByIdIfExists (사용자 존재하는 시 사용자 반환)
@@ -62,7 +62,7 @@ Swagger 문서화
   - isUserContainsTodo (해당 사용자 todo 목록에 있는지)
 
 
-##exception
+## exception
 - ErrorCode (Enum type)을 통해 exception 관리
   - DUPLICATED_USER (중복된 사용자 예외)
   - NO_TODO (할 일 없는 예외)
