@@ -18,15 +18,22 @@ public class Todo {
     private String title;
 
 
-    @ManyToOne
-    @JoinColumn(name = "user_id", nullable = false, foreignKey = @ForeignKey(ConstraintMode.NO_CONSTRAINT))
-    private User user;
+//    @ManyToOne
+//    @JoinColumn(name = "user_id", nullable = false, foreignKey = @ForeignKey(ConstraintMode.NO_CONSTRAINT))
+//    private User user;
 
+    @Column(name = "user_id", nullable = false)
+    private String userName;
 
-    public Todo(String title, User user) {
+    public Todo(String title, String userName) {
         this.title = title;
-        this.user = user;
+        this.userName = userName;
     }
+
+//    public Todo(String title, User user) {
+//        this.title = title;
+//        this.user = user;
+//    }
 
 
     public void updateTitle(String title) { // 더티 체킹을 의도했는데..

@@ -12,7 +12,9 @@ import java.util.List;
 @Embeddable
 @NoArgsConstructor
 public class Todos {
-    @OneToMany(mappedBy = "user")
+
+
+//    @OneToMany(mappedBy = "user")
     private List<Todo> todoList;
 
 

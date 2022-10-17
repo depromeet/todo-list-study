@@ -29,22 +29,24 @@ public class TodoService {
 
     public ResponseTodoDto getTodo(String name, Long todoId) {
         User user = commonService.findUserByIdIfExists(name);
-        Todos todoList = user.getTodos();
-        Todo todo = todoList.checkUserContainsTodo(todoId);
-        return todoEntityToDto(todo);
+//        Todos todoList = user.getTodos();
+//        Todo todo = todoList.checkUserContainsTodo(todoId);
+        Todo byId = todoRepository.getById(todoId);
+        return todoEntityToDto(byId);
     }
 
 
     public List<ResponseTodoDto> getUserTodoList(String name) {
         User user = commonService.findUserByIdIfExists(name);
-        Todos todoList = user.getTodos();
-        return todoListToTodoDtoList(todoList);
+        List<Todo> allTodos = todoRepository.findAllTodos(name);
+//        Todos todoList = user.getTodos();
+        return todoListToTodoDtoList(allTodos);
     }
 
 
     public ResponseTodoDto addTodo(String name, RequestTodoDto requestTodoDto) {
-        User user = commonService.findUserByIdIfExists(name);
-        Todo todo = new Todo(requestTodoDto.getTitle(), user);
+//        User user = commonService.findUserByIdIfExists(name);
+        Todo todo = new Todo(requestTodoDto.getTitle(), name);
         Todo savedTodo = todoRepository.save(todo);
         return todoEntityToDto(savedTodo);
     }
@@ -52,16 +54,17 @@ public class TodoService {
 
     public ResponseTodoDto updateTodoTitle(String name, Long todoId, String newTitle) {
         User user = commonService.findUserByIdIfExists(name);
-        Todo todo = user.getTodos().checkUserContainsTodo(todoId);
-        todo.updateTitle(newTitle);
-        return todoEntityToDto(todo);
+//        Todo todo = user.getTodos().checkUserContainsTodo(todoId);
+        Todo byId = todoRepository.getById(todoId);
+        byId.updateTitle(newTitle);
+        return todoEntityToDto(byId);
     }
 
 
     public void deleteTodo(String name, Long todoId) {
         User user = commonService.findUserByIdIfExists(name);
-        Todo todo = user.getTodos().checkUserContainsTodo(todoId);
-        todoRepository.delete(todo);
+//        Todo todo = user.getTodos().checkUserContainsTodo(todoId);
+        todoRepository.deleteById(todoId);
     }
 
 
@@ -70,8 +73,7 @@ public class TodoService {
     }
 
 
-    private List<ResponseTodoDto> todoListToTodoDtoList(Todos todos) {
-        List<Todo> todoList = todos.getTodoList();
-        return todoList.stream().map(this::todoEntityToDto).collect(Collectors.toList());
+    private List<ResponseTodoDto> todoListToTodoDtoList(List<Todo> todos) {
+        return todos.stream().map(this::todoEntityToDto).collect(Collectors.toList());
     }
 }
