@@ -12,6 +12,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.net.URI;
+
 @Slf4j
 @RestController
 @RequiredArgsConstructor
@@ -23,20 +25,20 @@ public class UserController {
     @PostMapping
     public ResponseEntity<ResponseUserDto> createUser(@RequestBody RequestUserDto requestUserDto) {
         ResponseUserDto responseUserDto = userService.createUser(requestUserDto);
-        return new ResponseEntity<>(responseUserDto, HttpStatus.CREATED);
+        return ResponseEntity.created(URI.create("/api/v1/users")).body(responseUserDto);
     }
 
 
     @GetMapping("/{name}")
     public ResponseEntity<ResponseUserDto> findUser(@PathVariable String name) {
         ResponseUserDto responseUserDto = userService.findUser(name);
-        return new ResponseEntity<>(responseUserDto, HttpStatus.OK);
+        return ResponseEntity.ok().body(responseUserDto);
     }
 
 
     @DeleteMapping("/{name}")
     public ResponseEntity<ResponseUserDto> deleteUser(@PathVariable String name) {
         userService.deleteUser(name);
-        return new ResponseEntity<>(null, HttpStatus.NO_CONTENT);
+        return ResponseEntity.noContent().build();
     }
 }

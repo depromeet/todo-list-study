@@ -72,10 +72,6 @@ public class TodoService {
 
     private List<ResponseTodoDto> todoListToTodoDtoList(Todos todos) {
         List<Todo> todoList = todos.getTodoList();
-//        List<ResponseTodoDto> output = new ArrayList<>();
-//        for (Todo todo : todoList) {
-//            output.add(todoEntityToDto(todo));
-//        }
         return todoList.stream().map(this::todoEntityToDto).collect(Collectors.toList());
     }
 }
