@@ -1,4 +1,6 @@
 # REAL TODO-LIST
+
+
 > ##FOCUSED ON
 >- REST 컨벤션 준수
 >- 한 메서드당 하나의 기능
@@ -17,6 +19,7 @@
 Swagger 문서화
 ![img.png](img.png)
 
+
 ##dto
 - Request
   - RequestUserDto
@@ -24,6 +27,7 @@ Swagger 문서화
 - Response
   - ResponseUserDto
   - ResponseTodoDto
+
 
 ##controller
 - UserController
@@ -40,6 +44,7 @@ Swagger 문서화
     - RequestBody : RequestTodoDto
   - 삭제 (method : DELETE, "/users/{name}/todo-list/{todoId}")
 
+
 ##service
 각 서비스에서 Entity -> Dto 변환 메서드를 따로 만들어 하나의 메서드가 하나의 역할을 가질 수 있도록 함
 - CommonService
@@ -55,12 +60,12 @@ Swagger 문서화
   - deleteTodo (할 일 삭제)
   - isUserContainsTodo (해당 사용자 todo 목록에 있는지)
 
+
 ##exception
 - ErrorCode (Enum type)을 통해 exception 관리
   - DUPLICATED_USER (중복된 사용자 예외)
   - NO_TODO (할 일 없는 예외)
   - NO_USER (사용자 없는 예외)
-
 - 상황 별 에러메시지 구체화
   - ex) 사용자 중복시 (DUPLICATED_USER) 어떤 유저와 중복되는지 errorDetail 작성
 - @RestControllerAdvice 를 활용한 에러 Response
