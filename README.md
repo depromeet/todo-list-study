@@ -7,9 +7,9 @@
 >  - 가독성 확보
 >- Custom Exception
 >  - 에러 메시지 구체화
->- ResponseEntity를 활용한 status & body
->- JPA를 활용한 엔티티 CRUD
->  - Transectional
+>- ResponseEntity 를 활용한 status & body
+>- JPA 를 활용한 엔티티 CRUD
+>  - Transactional
 >  - ManyToOne, OneToMany
 >    - FK 없는 관계
 >-  일급 컬렉션(Todos)을 활용한 User별 Todo List 관리
