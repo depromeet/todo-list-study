@@ -25,6 +25,9 @@ public class Todos {
         return todoList.stream()
                 .filter(todo -> todo.getId().equals(todoId))
                 .findFirst()
-                .orElseThrow(()->new BusinessException(ErrorCode.NO_TODO));
+                .orElseThrow(()-> BusinessException.builder()
+                        .errorCode(ErrorCode.NO_TODO)
+                        .errorDetail("해당 사용자에게 존재하지 않는 할 일")
+                        .build());
     }
 }

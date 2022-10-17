@@ -45,7 +45,10 @@ public class UserService {
     private User checkUserDuplicated(RequestUserDto requestUserDto) {
         String userName = requestUserDto.getName();
         if (userRepository.existsById(userName)) {
-            throw new BusinessException(ErrorCode.DUPLICATED_USER);
+            throw BusinessException.builder()
+                    .errorCode(ErrorCode.DUPLICATED_USER)
+                    .errorDetail(userName+" 사용자 중복됨")
+                    .build();
         }
         return new User(userName);
     }

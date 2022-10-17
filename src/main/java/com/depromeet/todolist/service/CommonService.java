@@ -15,6 +15,8 @@ public class CommonService {
 
     public User findUserByIdIfExists(String name){
         return userRepository.findById(name)
-                .orElseThrow(() -> new BusinessException(ErrorCode.NO_USER));
+                .orElseThrow(() -> BusinessException.builder()
+                        .errorCode(ErrorCode.NO_USER)
+                        .build());
     }
 }
