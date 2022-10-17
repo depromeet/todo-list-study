@@ -1,15 +1,29 @@
 # REAL TODO-LIST
-> REST 컨벤션 준수하기
+> ##FOCUSED ON
+>- REST 컨벤션 준수
+>- 한 메서드당 하나의 기능
+>  - 가독성 확보
+>- Custom Exception
+>  - 에러 메시지 구체화
+>- ResponseEntity를 활용한 status & body
+>- JPA를 활용한 엔티티 CRUD
+>  - Transectional
+>  - ManyToOne, OneToMany
+>    - FK 없는 관계
+>-  일급 컬렉션(Todos)을 활용한 User별 Todo List 관리
 
-#구현된 기능
+
+#API
+Swagger 문서화
+![img.png](img.png)
 
 ##dto
 - Request
   - RequestUserDto
   - RequestTodoDto
 - Response
-    - ResponseUserDto
-    - ResponseTodoDto
+  - ResponseUserDto
+  - ResponseTodoDto
 
 ##controller
 - UserController
@@ -27,6 +41,9 @@
   - 삭제 (method : DELETE, "/users/{name}/todo-list/{todoId}")
 
 ##service
+각 서비스에서 Entity -> Dto 변환 메서드를 따로 만들어 하나의 메서드가 하나의 역할을 가질 수 있도록 함
+- CommonService
+  - findUserByIdIfExists (사용자 존재하는 시 사용자 반환)
 - UserService
   - findUser (사용자 검색)
   - createUser (사용자 추가)
@@ -39,11 +56,11 @@
   - isUserContainsTodo (해당 사용자 todo 목록에 있는지)
 
 ##exception
-- DuplicatedUserException (중복된 사용자 예외)
-- TodoNotFoundException (할 일 없는 예외)
-- UserNotFoundException (사용자 없는 예외)
+- ErrorCode (Enum type)을 통해 exception 관리
+  - DUPLICATED_USER (중복된 사용자 예외)
+  - NO_TODO (할 일 없는 예외)
+  - NO_USER (사용자 없는 예외)
 
-
-# NEED HELP
-- TodoService :  List<Todo> -> List<ResponseTodoDto> 간단히.
-- todo Patch가 적용되지 않음.
+- 상황 별 에러메시지 구체화
+  - ex) 사용자 중복시 (DUPLICATED_USER) 어떤 유저와 중복되는지 errorDetail 작성
+- @RestControllerAdvice 를 활용한 에러 Response
