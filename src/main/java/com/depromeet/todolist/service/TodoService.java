@@ -16,6 +16,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Slf4j
 @Service
@@ -71,10 +72,10 @@ public class TodoService {
 
     private List<ResponseTodoDto> todoListToTodoDtoList(Todos todos) {
         List<Todo> todoList = todos.getTodoList();
-        List<ResponseTodoDto> output = new ArrayList<>();
-        for (Todo todo : todoList) {
-            output.add(todoEntityToDto(todo));
-        }
-        return output;
+//        List<ResponseTodoDto> output = new ArrayList<>();
+//        for (Todo todo : todoList) {
+//            output.add(todoEntityToDto(todo));
+//        }
+        return todoList.stream().map(this::todoEntityToDto).collect(Collectors.toList());
     }
 }
