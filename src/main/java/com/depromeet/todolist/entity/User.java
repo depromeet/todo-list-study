@@ -15,10 +15,6 @@ public class User {
     private String name;
 
 
-    @Embedded
-    private Todos todos = new Todos();
-
-
     public User(String name) {
         this.name = name;
     }
