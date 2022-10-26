@@ -19,12 +19,12 @@ public class Todo {
 
 
     @Column(name = "user_id", nullable = false)
-    private String userName;
+    private String userId;
 
 
-    public Todo(String title, String userName) {
+    public Todo(String title, String userId) {
         this.title = title;
-        this.userName = userName;
+        this.userId = userId;
     }
 
 

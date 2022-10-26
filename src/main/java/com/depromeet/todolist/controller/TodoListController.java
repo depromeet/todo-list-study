@@ -13,43 +13,43 @@ import java.util.List;
 
 @Slf4j
 @RestController
-@RequestMapping("/api/v1/users/{name}/todos")
+@RequestMapping("/api/v1/users/{userId}/todos")
 @RequiredArgsConstructor
 public class TodoListController {
     private final TodoService todoService;
 
 
     @GetMapping
-    public ResponseEntity<List<ResponseTodoDto>> userTodoList(@PathVariable String name) {
-        List<ResponseTodoDto> userTodoList = todoService.getUserTodoList(name);
+    public ResponseEntity<List<ResponseTodoDto>> userTodoList(@PathVariable String userId) {
+        List<ResponseTodoDto> userTodoList = todoService.getUserTodoList(userId);
         return ResponseEntity.ok().body(userTodoList);
     }
 
 
     @GetMapping("/{todoId}")
-    public ResponseEntity<ResponseTodoDto> userTodo(@PathVariable String name, @PathVariable Long todoId) {
-        ResponseTodoDto responseTodoDto = todoService.getTodo(name, todoId);
+    public ResponseEntity<ResponseTodoDto> userTodo(@PathVariable String userId, @PathVariable Long todoId) {
+        ResponseTodoDto responseTodoDto = todoService.getTodo(userId, todoId);
         return ResponseEntity.ok().body(responseTodoDto);
     }
 
 
     @PostMapping
-    public ResponseEntity<ResponseTodoDto> addUserTodo(@PathVariable String name, @RequestBody RequestTodoDto requestTodoDto) {
-        ResponseTodoDto responseTodoDto = todoService.addTodo(name, requestTodoDto);
-        return ResponseEntity.created(URI.create("/api/v1/users/"+ name +"/todos")).body(responseTodoDto);
+    public ResponseEntity<ResponseTodoDto> addUserTodo(@PathVariable String userId, @RequestBody RequestTodoDto requestTodoDto) {
+        ResponseTodoDto responseTodoDto = todoService.addTodo(userId, requestTodoDto);
+        return ResponseEntity.created(URI.create("/api/v1/users/"+ userId +"/todos")).body(responseTodoDto);
     }
 
 
     @PatchMapping("/{todoId}")
-    public ResponseEntity<ResponseTodoDto> updateUserTodo(@PathVariable String name, @PathVariable Long todoId, @RequestBody RequestTodoDto requestTodoDto) {
-        ResponseTodoDto responseTodoDto = todoService.updateTodoTitle(name, todoId, requestTodoDto.getTitle());
-        return ResponseEntity.created(URI.create("/api/v1/users/"+ name +"/todos/" + todoId)).body(responseTodoDto);
+    public ResponseEntity<ResponseTodoDto> updateUserTodo(@PathVariable String userId, @PathVariable Long todoId, @RequestBody RequestTodoDto requestTodoDto) {
+        ResponseTodoDto responseTodoDto = todoService.updateTodoTitle(userId, todoId, requestTodoDto.getTitle());
+        return ResponseEntity.created(URI.create("/api/v1/users/"+ userId +"/todos/" + todoId)).body(responseTodoDto);
     }
 
 
     @DeleteMapping("/{todoId}")
-    public ResponseEntity<ResponseTodoDto> deleteUserTodo(@PathVariable String name, @PathVariable Long todoId) {
-        todoService.deleteTodo(name, todoId);
+    public ResponseEntity<ResponseTodoDto> deleteUserTodo(@PathVariable String userId, @PathVariable Long todoId) {
+        todoService.deleteTodo(userId, todoId);
         return ResponseEntity.noContent().build();
     }
 }

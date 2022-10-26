@@ -13,8 +13,8 @@ public class CommonService {
     private final UserRepository userRepository;
 
 
-    public User findUserByIdIfExists(String name){
-        return userRepository.findById(name)
+    public User findUserByIdIfExists(String userId){
+        return userRepository.findById(userId)
                 .orElseThrow(() -> BusinessException.builder()
                         .errorCode(ErrorCode.NO_USER)
                         .build());

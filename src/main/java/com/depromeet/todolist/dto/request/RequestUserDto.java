@@ -6,5 +6,6 @@ import lombok.*;
 @NoArgsConstructor
 @AllArgsConstructor
 public class RequestUserDto {
+    private String userId;
     private String name;
 }

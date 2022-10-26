@@ -2,13 +2,9 @@ package com.depromeet.todolist.controller;
 
 import com.depromeet.todolist.dto.request.RequestUserDto;
 import com.depromeet.todolist.dto.response.ResponseUserDto;
-import com.depromeet.todolist.entity.User;
-import com.depromeet.todolist.exception.ErrorCode;
-import com.depromeet.todolist.exception.BusinessException;
 import com.depromeet.todolist.service.UserService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -29,16 +25,16 @@ public class UserController {
     }
 
 
-    @GetMapping("/{name}")
-    public ResponseEntity<ResponseUserDto> findUser(@PathVariable String name) {
-        ResponseUserDto responseUserDto = userService.findUser(name);
+    @GetMapping("/{userId}")
+    public ResponseEntity<ResponseUserDto> findUser(@PathVariable String userId) {
+        ResponseUserDto responseUserDto = userService.findUser(userId);
         return ResponseEntity.ok().body(responseUserDto);
     }
 
 
-    @DeleteMapping("/{name}")
-    public ResponseEntity<ResponseUserDto> deleteUser(@PathVariable String name) {
-        userService.deleteUser(name);
+    @DeleteMapping("/{userId}")
+    public ResponseEntity<ResponseUserDto> deleteUser(@PathVariable String userId) {
+        userService.deleteUser(userId);
         return ResponseEntity.noContent().build();
     }
 }

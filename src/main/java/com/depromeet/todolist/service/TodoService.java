@@ -24,35 +24,35 @@ public class TodoService {
     private final TodoRepository todoRepository;
 
 
-    public ResponseTodoDto getTodo(String name, Long todoId) {
-        Todo todo = checkUserHasTodo(name, todoId);
+    public ResponseTodoDto getTodo(String userId, Long todoId) {
+        Todo todo = checkUserHasTodo(userId, todoId);
         return todoEntityToDto(todo);
     }
 
 
-    public List<ResponseTodoDto> getUserTodoList(String name) {
-        String userName = commonService.findUserByIdIfExists(name).getName();
-        List<Todo> allTodos = todoRepository.findAllTodos(userName);
+    public List<ResponseTodoDto> getUserTodoList(String userId) {
+        String validUserId = commonService.findUserByIdIfExists(userId).getUserId();
+        List<Todo> allTodos = todoRepository.findByUserId(validUserId);
         return todoListToTodoDtoList(allTodos);
     }
 
 
-    public ResponseTodoDto addTodo(String name, RequestTodoDto requestTodoDto) {
-        String userName = commonService.findUserByIdIfExists(name).getName();
-        Todo savedTodo = todoRepository.save(new Todo(requestTodoDto.getTitle(), userName));
+    public ResponseTodoDto addTodo(String userId, RequestTodoDto requestTodoDto) {
+        User user = commonService.findUserByIdIfExists(userId);
+        Todo savedTodo = todoRepository.save(new Todo(requestTodoDto.getTitle(), user.getUserId()));
         return todoEntityToDto(savedTodo);
     }
 
 
-    public ResponseTodoDto updateTodoTitle(String name, Long todoId, String newTitle) {
-        Todo todo = checkUserHasTodo(name, todoId);
+    public ResponseTodoDto updateTodoTitle(String userId, Long todoId, String newTitle) {
+        Todo todo = checkUserHasTodo(userId, todoId);
         todo.updateTitle(newTitle);
         return todoEntityToDto(todo);
     }
 
 
-    public void deleteTodo(String name, Long todoId) {
-        Todo todo = checkUserHasTodo(name, todoId);
+    public void deleteTodo(String userId, Long todoId) {
+        Todo todo = checkUserHasTodo(userId, todoId);
         todoRepository.delete(todo);
     }
 
@@ -67,13 +67,13 @@ public class TodoService {
     }
 
 
-    private Todo checkUserHasTodo(String name, Long todoId) {
+    private Todo checkUserHasTodo(String userId, Long todoId) {
         Todo todo = checkTodoExists(todoId);
-        User user = commonService.findUserByIdIfExists(name);
-        if (!user.getName().equals(todo.getUserName())) {
+        User user = commonService.findUserByIdIfExists(userId);
+        if (!user.getUserId().equals(todo.getUserId())) {
             throw BusinessException.builder()
                     .errorCode(ErrorCode.NO_TODO)
-                    .errorDetail(name + " 사용자에 존재하지 않는 할 일")
+                    .errorDetail(user.getName() + " 사용자에 존재하지 않는 할 일")
                     .build();
         }
         return todo;

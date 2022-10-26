@@ -5,5 +5,6 @@ import lombok.*;
 @Getter
 @RequiredArgsConstructor
 public class ResponseUserDto {
+    private final String userId;
     private final String name;
 }
