@@ -1,7 +1,6 @@
 package com.depromeet.todolist.controller;
 
-import com.depromeet.todolist.dto.request.RequestUserDto;
-import com.depromeet.todolist.dto.response.ResponseUserDto;
+import com.depromeet.todolist.dto.UserDto;
 import com.depromeet.todolist.service.UserService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -19,19 +18,19 @@ public class UserController {
     private final UserService userService;
 
     @PostMapping
-    public ResponseEntity<ResponseUserDto> createUser(@RequestBody RequestUserDto requestUserDto) {
-        ResponseUserDto responseUserDto = userService.createUser(requestUserDto);
-        return ResponseEntity.created(URI.create("/api/v1/users")).body(responseUserDto);
+    public ResponseEntity<UserDto.Response> createUser(@RequestBody UserDto.Request userRequest) {
+        UserDto.Response userResponse = userService.createUser(userRequest);
+        return ResponseEntity.created(URI.create("/api/v1/users")).body(userResponse);
     }
 
     @GetMapping("/{userId}")
-    public ResponseEntity<ResponseUserDto> findUser(@PathVariable String userId) {
-        ResponseUserDto responseUserDto = userService.findUser(userId);
-        return ResponseEntity.ok().body(responseUserDto);
+    public ResponseEntity<UserDto.Response> findUser(@PathVariable String userId) {
+        UserDto.Response userResponse = userService.findUser(userId);
+        return ResponseEntity.ok().body(userResponse);
     }
 
     @DeleteMapping("/{userId}")
-    public ResponseEntity<ResponseUserDto> deleteUser(@PathVariable String userId) {
+    public ResponseEntity<UserDto.Response> deleteUser(@PathVariable String userId) {
         userService.deleteUser(userId);
         return ResponseEntity.noContent().build();
     }

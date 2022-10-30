@@ -1,7 +1,6 @@
 package com.depromeet.todolist.service;
 
-import com.depromeet.todolist.dto.request.RequestTodoDto;
-import com.depromeet.todolist.dto.response.ResponseTodoDto;
+import com.depromeet.todolist.dto.TodoDto;
 import com.depromeet.todolist.entity.Todo;
 import com.depromeet.todolist.entity.User;
 import com.depromeet.todolist.exception.BusinessException;
@@ -24,24 +23,24 @@ public class TodoService {
     private final CommonService commonService;
     private final TodoRepository todoRepository;
 
-    public ResponseTodoDto getTodo(String userId, Long todoId) {
+    public TodoDto.Response getTodo(String userId, Long todoId) {
         Todo todo = checkUserHasTodo(userId, todoId);
         return todoEntityToDto(todo);
     }
 
-    public List<ResponseTodoDto> getUserTodoList(String userId) {
+    public List<TodoDto.Response> getUserTodos(String userId) {
         String validUserId = commonService.findUserByIdIfExists(userId).getUserId();
         List<Todo> allTodos = todoRepository.findByUserId(validUserId);
         return todoListToTodoDtoList(allTodos);
     }
 
-    public ResponseTodoDto addTodo(String userId, RequestTodoDto requestTodoDto) {
+    public TodoDto.Response addTodo(String userId, TodoDto.Request todoRequest) {
         User user = commonService.findUserByIdIfExists(userId);
-        Todo savedTodo = todoRepository.save(new Todo(requestTodoDto.getTitle(), user.getUserId()));
+        Todo savedTodo = todoRepository.save(new Todo(todoRequest.getTitle(), user.getUserId()));
         return todoEntityToDto(savedTodo);
     }
 
-    public ResponseTodoDto updateTodoTitle(String userId, Long todoId, String newTitle) {
+    public TodoDto.Response updateTodoTitle(String userId, Long todoId, String newTitle) {
         Todo todo = checkUserHasTodo(userId, todoId);
         todo.updateTitle(newTitle);
         return todoEntityToDto(todo);
@@ -52,11 +51,11 @@ public class TodoService {
         todoRepository.delete(todo);
     }
 
-    private ResponseTodoDto todoEntityToDto(Todo todo) {
-        return new ResponseTodoDto(todo.getId(), todo.getTitle());
+    private TodoDto.Response todoEntityToDto(Todo todo) {
+        return new TodoDto.Response(todo.getId(), todo.getTitle());
     }
 
-    private List<ResponseTodoDto> todoListToTodoDtoList(List<Todo> todos) {
+    private List<TodoDto.Response> todoListToTodoDtoList(List<Todo> todos) {
         return todos.stream().map(this::todoEntityToDto).collect(Collectors.toList());
     }
 
