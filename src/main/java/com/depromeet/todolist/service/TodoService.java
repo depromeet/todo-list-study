@@ -20,15 +20,14 @@ import java.util.stream.Collectors;
 @Transactional
 @RequiredArgsConstructor
 public class TodoService {
+
     private final CommonService commonService;
     private final TodoRepository todoRepository;
-
 
     public ResponseTodoDto getTodo(String userId, Long todoId) {
         Todo todo = checkUserHasTodo(userId, todoId);
         return todoEntityToDto(todo);
     }
-
 
     public List<ResponseTodoDto> getUserTodoList(String userId) {
         String validUserId = commonService.findUserByIdIfExists(userId).getUserId();
@@ -36,13 +35,11 @@ public class TodoService {
         return todoListToTodoDtoList(allTodos);
     }
 
-
     public ResponseTodoDto addTodo(String userId, RequestTodoDto requestTodoDto) {
         User user = commonService.findUserByIdIfExists(userId);
         Todo savedTodo = todoRepository.save(new Todo(requestTodoDto.getTitle(), user.getUserId()));
         return todoEntityToDto(savedTodo);
     }
-
 
     public ResponseTodoDto updateTodoTitle(String userId, Long todoId, String newTitle) {
         Todo todo = checkUserHasTodo(userId, todoId);
@@ -50,22 +47,18 @@ public class TodoService {
         return todoEntityToDto(todo);
     }
 
-
     public void deleteTodo(String userId, Long todoId) {
         Todo todo = checkUserHasTodo(userId, todoId);
         todoRepository.delete(todo);
     }
 
-
     private ResponseTodoDto todoEntityToDto(Todo todo) {
         return new ResponseTodoDto(todo.getId(), todo.getTitle());
     }
 
-
     private List<ResponseTodoDto> todoListToTodoDtoList(List<Todo> todos) {
         return todos.stream().map(this::todoEntityToDto).collect(Collectors.toList());
     }
-
 
     private Todo checkUserHasTodo(String userId, Long todoId) {
         Todo todo = checkTodoExists(todoId);
@@ -78,7 +71,6 @@ public class TodoService {
         }
         return todo;
     }
-
 
     private Todo checkTodoExists(Long todoId) {
         return todoRepository.findById(todoId).orElseThrow(() -> BusinessException.builder()

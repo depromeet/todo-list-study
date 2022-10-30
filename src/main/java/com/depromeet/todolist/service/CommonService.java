@@ -10,8 +10,8 @@ import org.springframework.stereotype.Service;
 @Service
 @RequiredArgsConstructor
 public class CommonService {
-    private final UserRepository userRepository;
 
+    private final UserRepository userRepository;
 
     public User findUserByIdIfExists(String userId){
         return userRepository.findById(userId)

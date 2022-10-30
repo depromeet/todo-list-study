@@ -10,12 +10,12 @@ import javax.persistence.*;
 @Entity
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class User {
+
     @Id
     private String userId;
 
     @Column(name = "name", nullable = false)
     private String name;
-
 
     public User(String userId, String name) {
         this.userId = userId;

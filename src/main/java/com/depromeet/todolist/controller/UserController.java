@@ -15,8 +15,8 @@ import java.net.URI;
 @RequiredArgsConstructor
 @RequestMapping("/api/v1/users")
 public class UserController {
-    private final UserService userService;
 
+    private final UserService userService;
 
     @PostMapping
     public ResponseEntity<ResponseUserDto> createUser(@RequestBody RequestUserDto requestUserDto) {
@@ -24,13 +24,11 @@ public class UserController {
         return ResponseEntity.created(URI.create("/api/v1/users")).body(responseUserDto);
     }
 
-
     @GetMapping("/{userId}")
     public ResponseEntity<ResponseUserDto> findUser(@PathVariable String userId) {
         ResponseUserDto responseUserDto = userService.findUser(userId);
         return ResponseEntity.ok().body(responseUserDto);
     }
-
 
     @DeleteMapping("/{userId}")
     public ResponseEntity<ResponseUserDto> deleteUser(@PathVariable String userId) {
