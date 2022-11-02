@@ -1,12 +1,10 @@
 package com.depromeet.todolist.controller;
 
-import com.depromeet.todolist.converter.TodoEntityConverter;
 import com.depromeet.todolist.dto.TodoDto;
 import com.depromeet.todolist.entity.Todo;
 import com.depromeet.todolist.service.TodoService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
-import io.swagger.annotations.ApiParam;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.hateoas.EntityModel;

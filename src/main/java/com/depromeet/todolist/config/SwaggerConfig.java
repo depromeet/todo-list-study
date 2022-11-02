@@ -14,6 +14,7 @@ import springfox.documentation.swagger2.annotations.EnableSwagger2;
  * Springfox 3.0 부터 주소가 바뀜
  * Swagger 접근 주소 : http://localhost:8080/swagger-ui/index.html
  */
+
 @Configuration
 @EnableSwagger2
 public class SwaggerConfig {
@@ -24,7 +25,7 @@ public class SwaggerConfig {
                 .useDefaultResponseMessages(false)
                 .select()
                 .apis(RequestHandlerSelectors.any())
-                .paths(PathSelectors.ant("/api/v1/users/**"))
+                .paths(PathSelectors.ant("/api/v1/**"))
                 .build()
                 .apiInfo(apiInfo());
     }
