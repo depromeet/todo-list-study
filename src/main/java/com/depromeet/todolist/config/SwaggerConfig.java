@@ -10,6 +10,10 @@ import springfox.documentation.spi.DocumentationType;
 import springfox.documentation.spring.web.plugins.Docket;
 import springfox.documentation.swagger2.annotations.EnableSwagger2;
 
+/**
+ * Springfox 3.0 부터 주소가 바뀜
+ * Swagger 접근 주소 : http://localhost:8080/swagger-ui/index.html
+ */
 @Configuration
 @EnableSwagger2
 public class SwaggerConfig {
@@ -17,9 +21,10 @@ public class SwaggerConfig {
     @Bean
     public Docket api() {
         return new Docket(DocumentationType.SWAGGER_2)
+                .useDefaultResponseMessages(false)
                 .select()
                 .apis(RequestHandlerSelectors.any())
-                .paths(PathSelectors.any())
+                .paths(PathSelectors.ant("/api/v1/users/**"))
                 .build()
                 .apiInfo(apiInfo());
     }
