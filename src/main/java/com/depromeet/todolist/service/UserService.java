@@ -39,6 +39,7 @@ public class UserService {
         return userRepository.findById(userId)
                 .orElseThrow(() -> BusinessException.builder()
                         .errorCode(ErrorCode.NO_USER)
+                        .errorDetail("존재하지 않는 사용자")
                         .build());
     }
 

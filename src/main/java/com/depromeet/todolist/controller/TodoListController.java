@@ -23,14 +23,14 @@ public class TodoListController {
 
     @GetMapping
     public ResponseEntity<List<TodoDto.Response>> userTodos(@PathVariable String userId) {
-        List<TodoDto.Response> responses = todoService.getUserTodos(userId);
-        return ResponseEntity.ok().body(responses);
+        List<TodoDto.Response> todosDtoResponse = todoService.getUserTodos(userId);
+        return ResponseEntity.ok().body(todosDtoResponse);
     }
 
     @GetMapping("/{todoId}")
     public ResponseEntity<TodoDto.Response> userTodo(@PathVariable String userId, @PathVariable Long todoId) {
-        TodoDto.Response response = todoService.getTodo(userId, todoId);
-        return ResponseEntity.ok().body(response);
+        TodoDto.Response todoDtoResponse = todoService.getTodo(userId, todoId);
+        return ResponseEntity.ok().body(todoDtoResponse);
     }
 
     @PostMapping
