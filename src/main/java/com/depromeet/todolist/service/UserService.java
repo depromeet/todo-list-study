@@ -1,5 +1,6 @@
 package com.depromeet.todolist.service;
 
+import com.depromeet.todolist.converter.UserEntityConverter;
 import com.depromeet.todolist.dto.UserDto;
 import com.depromeet.todolist.entity.User;
 import com.depromeet.todolist.exception.BusinessException;
@@ -14,31 +15,31 @@ import org.springframework.stereotype.Service;
 @RequiredArgsConstructor
 public class UserService {
 
-    private final CommonService commonService;
     private final UserRepository userRepository;
+    private final UserEntityConverter userEntityConverter;
 
     public UserDto.Response createUser(UserDto.Request userRequest) {
-        User user = checkUserDuplicated(userRequest);
-        User savedUser = userRepository.save(user);
-        return userEntityToDto(savedUser);
+        User notDuplicatedUser = checkUserDuplicated(userRequest);
+        User savedUser = userRepository.save(notDuplicatedUser);
+        return userEntityConverter.userEntityToDto(savedUser);
     }
 
     public UserDto.Response findUser(String userId) {
-        User user = commonService.findUserByIdIfExists(userId);
-        return userEntityToDto(user);
+        User getUser = findUserByIdIfExists(userId);
+        return userEntityConverter.userEntityToDto(getUser);
     }
 
     public void deleteUser(String userId) {
-        User user = commonService.findUserByIdIfExists(userId);
+        User user = findUserByIdIfExists(userId);
         userRepository.delete(user);
+
     }
 
-    private UserDto.Response userEntityToDto(User user) {
-        return new UserDto.Response(user.getUserId(), user.getName());
-    }
-
-    private User userDtoToEntity(UserDto.Request userRequest) {
-        return new User(userRequest.getUserId(), userRequest.getName());
+    public User findUserByIdIfExists(String userId){
+        return userRepository.findById(userId)
+                .orElseThrow(() -> BusinessException.builder()
+                        .errorCode(ErrorCode.NO_USER)
+                        .build());
     }
 
     private User checkUserDuplicated(UserDto.Request userRequest) {
@@ -49,6 +50,6 @@ public class UserService {
                     .errorDetail("사용자 중복 아이디 : " + userId)
                     .build();
         }
-        return userDtoToEntity(userRequest);
+        return userEntityConverter.userDtoToEntity(userRequest);
     }
 }

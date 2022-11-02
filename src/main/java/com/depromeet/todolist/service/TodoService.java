@@ -1,5 +1,6 @@
 package com.depromeet.todolist.service;
 
+import com.depromeet.todolist.converter.TodoEntityConverter;
 import com.depromeet.todolist.dto.TodoDto;
 import com.depromeet.todolist.entity.Todo;
 import com.depromeet.todolist.entity.User;
@@ -8,11 +9,11 @@ import com.depromeet.todolist.exception.ErrorCode;
 import com.depromeet.todolist.repository.TodoRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.hateoas.EntityModel;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
-import java.util.stream.Collectors;
 
 @Slf4j
 @Service
@@ -20,30 +21,31 @@ import java.util.stream.Collectors;
 @RequiredArgsConstructor
 public class TodoService {
 
-    private final CommonService commonService;
+    private final UserService userService;
     private final TodoRepository todoRepository;
+    private final TodoEntityConverter todoEntityConverter;
 
     public TodoDto.Response getTodo(String userId, Long todoId) {
         Todo todo = checkUserHasTodo(userId, todoId);
-        return todoEntityToDto(todo);
+        return todoEntityConverter.todoEntityToDto(todo);
     }
 
     public List<TodoDto.Response> getUserTodos(String userId) {
-        String validUserId = commonService.findUserByIdIfExists(userId).getUserId();
-        List<Todo> allTodos = todoRepository.findByUserId(validUserId);
-        return todoListToTodoDtoList(allTodos);
+        String validUserId = userService.findUserByIdIfExists(userId).getUserId();
+        List<Todo> todos = todoRepository.findByUserId(validUserId);
+        return todoEntityConverter.todosToTodosDto(todos);
     }
 
-    public TodoDto.Response addTodo(String userId, TodoDto.Request todoRequest) {
-        User user = commonService.findUserByIdIfExists(userId);
+    public EntityModel<Todo> addTodo(String userId, TodoDto.Request todoRequest) {
+        User user = userService.findUserByIdIfExists(userId);
         Todo savedTodo = todoRepository.save(new Todo(todoRequest.getTitle(), user.getUserId()));
-        return todoEntityToDto(savedTodo);
+        return todoEntityConverter.toModel(savedTodo);
     }
 
-    public TodoDto.Response updateTodoTitle(String userId, Long todoId, String newTitle) {
+    public EntityModel<Todo> updateTodoTitle(String userId, Long todoId, String newTitle) {
         Todo todo = checkUserHasTodo(userId, todoId);
         todo.updateTitle(newTitle);
-        return todoEntityToDto(todo);
+        return todoEntityConverter.toModel(todo);
     }
 
     public void deleteTodo(String userId, Long todoId) {
@@ -51,17 +53,9 @@ public class TodoService {
         todoRepository.delete(todo);
     }
 
-    private TodoDto.Response todoEntityToDto(Todo todo) {
-        return new TodoDto.Response(todo.getId(), todo.getTitle());
-    }
-
-    private List<TodoDto.Response> todoListToTodoDtoList(List<Todo> todos) {
-        return todos.stream().map(this::todoEntityToDto).collect(Collectors.toList());
-    }
-
     private Todo checkUserHasTodo(String userId, Long todoId) {
         Todo todo = checkTodoExists(todoId);
-        User user = commonService.findUserByIdIfExists(userId);
+        User user = userService.findUserByIdIfExists(userId);
         if (!user.getUserId().equals(todo.getUserId())) {
             throw BusinessException.builder()
                     .errorCode(ErrorCode.NO_TODO)
@@ -74,6 +68,7 @@ public class TodoService {
     private Todo checkTodoExists(Long todoId) {
         return todoRepository.findById(todoId).orElseThrow(() -> BusinessException.builder()
                 .errorCode(ErrorCode.NO_TODO)
+                .errorDetail("존재하지 않는 할 일")
                 .build());
     }
 }

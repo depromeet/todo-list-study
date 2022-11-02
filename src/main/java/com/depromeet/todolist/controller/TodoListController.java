@@ -1,13 +1,16 @@
 package com.depromeet.todolist.controller;
 
+import com.depromeet.todolist.converter.TodoEntityConverter;
 import com.depromeet.todolist.dto.TodoDto;
+import com.depromeet.todolist.entity.Todo;
 import com.depromeet.todolist.service.TodoService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.hateoas.EntityModel;
+import org.springframework.hateoas.IanaLinkRelations;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.net.URI;
 import java.util.List;
 
 @Slf4j
@@ -20,26 +23,26 @@ public class TodoListController {
 
     @GetMapping
     public ResponseEntity<List<TodoDto.Response>> userTodos(@PathVariable String userId) {
-        List<TodoDto.Response> todosResponse = todoService.getUserTodos(userId);
-        return ResponseEntity.ok().body(todosResponse);
+        List<TodoDto.Response> responses = todoService.getUserTodos(userId);
+        return ResponseEntity.ok().body(responses);
     }
 
     @GetMapping("/{todoId}")
     public ResponseEntity<TodoDto.Response> userTodo(@PathVariable String userId, @PathVariable Long todoId) {
-        TodoDto.Response todoResponse = todoService.getTodo(userId, todoId);
-        return ResponseEntity.ok().body(todoResponse);
+        TodoDto.Response response = todoService.getTodo(userId, todoId);
+        return ResponseEntity.ok().body(response);
     }
 
     @PostMapping
-    public ResponseEntity<TodoDto.Response> addUserTodo(@PathVariable String userId, @RequestBody TodoDto.Request todoRequest) {
-        TodoDto.Response todoResponse = todoService.addTodo(userId, todoRequest);
-        return ResponseEntity.created(URI.create("/api/v1/users/"+ userId +"/todos")).body(todoResponse);
+    public ResponseEntity<EntityModel<Todo>> addUserTodo(@PathVariable String userId, @RequestBody TodoDto.Request todoRequest) {
+        EntityModel<Todo> todoEntityModel = todoService.addTodo(userId, todoRequest);
+        return ResponseEntity.created(todoEntityModel.getRequiredLink(IanaLinkRelations.SELF).toUri()).body(todoEntityModel);
     }
 
     @PatchMapping("/{todoId}")
-    public ResponseEntity<TodoDto.Response> updateUserTodo(@PathVariable String userId, @PathVariable Long todoId, @RequestBody TodoDto.Request todoRequest) {
-        TodoDto.Response todoResponse = todoService.updateTodoTitle(userId, todoId, todoRequest.getTitle());
-        return ResponseEntity.created(URI.create("/api/v1/users/"+ userId +"/todos/" + todoId)).body(todoResponse);
+    public ResponseEntity<EntityModel<Todo>> updateUserTodo(@PathVariable String userId, @PathVariable Long todoId, @RequestBody TodoDto.Request todoRequest) {
+        EntityModel<Todo> todoEntityModel = todoService.updateTodoTitle(userId, todoId, todoRequest.getTitle());
+        return ResponseEntity.created(todoEntityModel.getRequiredLink(IanaLinkRelations.SELF).toUri()).body(todoEntityModel);
     }
 
     @DeleteMapping("/{todoId}")
