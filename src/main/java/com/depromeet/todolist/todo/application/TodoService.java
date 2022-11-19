@@ -6,7 +6,8 @@ import java.util.UUID;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.depromeet.todolist.error.exception.todo.NotExistsTodoException;
+import com.depromeet.todolist.error.CustomException;
+import com.depromeet.todolist.error.ErrorCode;
 import com.depromeet.todolist.todo.domain.Todo;
 import com.depromeet.todolist.todo.infrastructure.TodoRepository;
 
@@ -29,7 +30,7 @@ public class TodoService {
     @Transactional(readOnly = true)
     public Todo getItem(UUID id) {
         return todoRepository.findById(id)
-                .orElseThrow(NotExistsTodoException::new);
+                .orElseThrow(() -> new CustomException(ErrorCode.TODO_NOT_FOUND));
     }
 
     @Transactional(readOnly = true)
@@ -39,8 +40,8 @@ public class TodoService {
 
     @Transactional()
     public Todo updateItem(UUID id, String content, boolean finished) {
-        Todo todo = todoRepository.findById(id)
-                .orElseThrow(NotExistsTodoException::new);
+        var todo = todoRepository.findById(id)
+                .orElseThrow(() -> new CustomException(ErrorCode.TODO_NOT_FOUND));
 
         todo.updateContent(content).updateFinished(finished);
 
@@ -49,7 +50,8 @@ public class TodoService {
 
     @Transactional()
     public void deleteItem(UUID id) {
-        todoRepository.deleteById(id);
-    }
+        var todo = todoRepository.findById(id).orElseThrow(() -> new CustomException(ErrorCode.TODO_NOT_FOUND));
 
+        todoRepository.delete(todo);
+    }
 }
