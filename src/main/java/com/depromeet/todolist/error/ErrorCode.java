@@ -16,5 +16,5 @@ public enum ErrorCode {
     DUPLICATE_RESOURCE(CONFLICT, "데이터가 이미 존재합니다");
 
     private final HttpStatus httpStatus;
-    private final String detail;
+    private final String message;
 }

@@ -23,7 +23,7 @@ public class ErrorResponse {
                         .status(errorCode.getHttpStatus().value())
                         .error(errorCode.getHttpStatus().name())
                         .code(errorCode.name())
-                        .message(errorCode.getDetail())
+                        .message(errorCode.getMessage())
                         .build());
     }
 }
