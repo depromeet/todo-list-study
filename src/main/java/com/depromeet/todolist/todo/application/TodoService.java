@@ -18,7 +18,7 @@ import lombok.RequiredArgsConstructor;
 public class TodoService {
     private final TodoRepository todoRepository;
 
-    @Transactional()
+    @Transactional
     public Todo createItem(String content, boolean finished) {
         return todoRepository.save(
                 Todo.builder()
@@ -38,7 +38,7 @@ public class TodoService {
         return todoRepository.findAll();
     }
 
-    @Transactional()
+    @Transactional
     public Todo updateItem(UUID id, String content, boolean finished) {
         var todo = todoRepository.findById(id)
                 .orElseThrow(() -> new CustomException(ErrorCode.TODO_NOT_FOUND));
@@ -48,7 +48,7 @@ public class TodoService {
         return todo;
     }
 
-    @Transactional()
+    @Transactional
     public void deleteItem(UUID id) {
         var todo = todoRepository.findById(id).orElseThrow(() -> new CustomException(ErrorCode.TODO_NOT_FOUND));
 

@@ -25,11 +25,11 @@ import lombok.RequiredArgsConstructor;
 
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/todos")
+@RequestMapping("api/v1/todos")
 public class TodoController {
     private final TodoFacade todoFacade;
 
-    @PostMapping("")
+    @PostMapping
     public ResponseEntity<TodoItemResponse> create(@RequestBody TodoItemCreateRequest request) {
         var response = todoFacade.createItem(request);
 
@@ -43,7 +43,7 @@ public class TodoController {
         return ResponseEntity.ok(response);
     }
 
-    @GetMapping("")
+    @GetMapping
     public ResponseEntity<TodoListResponse> findAll() {
         var response = todoFacade.getList();
 
