@@ -12,6 +12,11 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.Sort;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 
 import com.depromeet.todolist.todo.application.TodoService;
 import com.depromeet.todolist.todo.domain.Todo;
@@ -56,14 +61,17 @@ public class TodoServiceTest {
     @Test
     public void get_todo_list() throws Exception {
         List<Todo> todoList = new ArrayList<Todo>();
-        todoList.add(todo1);
+        todoList.add(todo1);;
         todoList.add(todo2);
         todoList.add(todo3);
-        given(todoRepository.findAll()).willReturn(todoList);
+        Page<Todo> pagedTodoList = new PageImpl<>(todoList);
+        final Pageable pageable = PageRequest.of(0, 20, Sort.Direction.DESC, "createdAt");
 
-        List<Todo> findTodoList = todoService.getList();
+        given(todoRepository.findAll(pageable)).willReturn(pagedTodoList);
+        
+        Page<Todo> findPagedTodoList = todoService.getList(pageable);
 
-        assertEquals(todoList, findTodoList);
+        assertEquals(findPagedTodoList, pagedTodoList);
     }
 
     @Test

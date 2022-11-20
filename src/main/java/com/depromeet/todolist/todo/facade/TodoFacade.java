@@ -1,8 +1,9 @@
 package com.depromeet.todolist.todo.facade;
 
 import java.util.UUID;
-import java.util.stream.Collectors;
 
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -10,7 +11,7 @@ import com.depromeet.todolist.todo.application.TodoService;
 import com.depromeet.todolist.todo.dto.request.TodoItemCreateRequest;
 import com.depromeet.todolist.todo.dto.request.TodoItemUpdateRequest;
 import com.depromeet.todolist.todo.dto.response.TodoItemResponse;
-import com.depromeet.todolist.todo.dto.response.TodoListResponse;
+import com.depromeet.todolist.todo.dto.response.TodoListPageResponse;
 
 import lombok.RequiredArgsConstructor;
 
@@ -27,13 +28,8 @@ public class TodoFacade {
     }
 
     @Transactional(readOnly = true)
-    public TodoListResponse getList() {
-        var response = todoService.getList()
-                .stream()
-                .map(TodoListResponse.TodoResponse::new)
-                .collect(Collectors.toList());
-
-        return new TodoListResponse(response);
+    public Page<TodoListPageResponse> getList(Pageable pageable) {
+        return todoService.getList(pageable).map(TodoListPageResponse::new);
     }
 
     @Transactional(readOnly = true)

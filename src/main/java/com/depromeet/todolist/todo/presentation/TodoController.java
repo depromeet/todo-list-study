@@ -2,6 +2,11 @@ package com.depromeet.todolist.todo.presentation;
 
 import java.util.UUID;
 
+import org.springdoc.api.annotations.ParameterObject;
+import org.springdoc.core.converters.models.PageableAsQueryParam;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -13,10 +18,11 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.depromeet.todolist.common.dto.PageDto;
 import com.depromeet.todolist.todo.dto.request.TodoItemCreateRequest;
 import com.depromeet.todolist.todo.dto.request.TodoItemUpdateRequest;
 import com.depromeet.todolist.todo.dto.response.TodoItemResponse;
-import com.depromeet.todolist.todo.dto.response.TodoListResponse;
+import com.depromeet.todolist.todo.dto.response.TodoListPageResponse;
 import com.depromeet.todolist.todo.facade.TodoFacade;
 
 import io.swagger.v3.oas.annotations.Operation;
@@ -48,10 +54,12 @@ public class TodoController {
 
     @Operation(summary = "투두 목록 모두를 가져옵니다.")
     @GetMapping
-    public ResponseEntity<TodoListResponse> findAll() {
-        var response = todoFacade.getList();
+    @PageableAsQueryParam
+    public ResponseEntity<PageDto<TodoListPageResponse>> findAll(
+            @PageableDefault(size = 20, page = 0, sort = "createdAt", direction = Sort.Direction.DESC) @ParameterObject Pageable pageable) {
+        var response = todoFacade.getList(pageable);
 
-        return ResponseEntity.ok(response);
+        return PageDto.ok(response);
     }
 
     @Operation(summary = "투두 목록 하나를 업데이트합니다.")
